@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xy.pank.dao.DotDao">
+
+    <select id="accessorys" resultType="com.xy.pank.entity.Accessory">
+        select *  from pk_accessory where id in ${ids}
+
+    </select>
+
+    <select id="getUserDot" resultType="com.xy.pank.entity.Dot">
+        SELECT pk_punch_card_record.`dot_tag` AS d_tag,ps_dot.`d_name`,ps_dot.id  FROM  pk_punch_card_record LEFT JOIN pk_ranking  ON pk_ranking.id = pk_punch_card_record.`rankingid`
+LEFT JOIN ps_dot ON pk_punch_card_record.`dot_tag` = ps_dot.`d_tag`
+WHERE pk_ranking.`complete`=0 AND pk_punch_card_record.`openid` = #{opeind}
+    </select>
+
+    <select id="getUsernot" resultType="com.xy.pank.entity.Dot">
+
+        SELECT *  FROM ps_dot WHERE id NOT IN
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.id}
+        </foreach>
+    </select>
+</mapper>

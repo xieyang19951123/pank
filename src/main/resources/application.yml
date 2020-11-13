@@ -1,0 +1,48 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: mytigger
+      password: xy19951123
+#          username: myroot
+#          password: 1qaz2wsx
+      url: jdbc:mysql://106.75.162.179:3305/pk_pank?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+#      url: jdbc:mysql://localhost:3306/pk_pank?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+#      username: root
+#      password: root
+      initial-size: 10
+      max-active: 100
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+  application:
+    name: gulimall-product
+  redis:
+    host: 106.75.162.179
+    port: 6379
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 1
+    timeout: 30000
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: AUTO
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+
+
+server:
+  port: 8082

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xy.pank.dao.UserDao">
+        <select id="selectpangpna" resultType="com.xy.pank.entity.Ranking">
+
+           SELECT * FROM (SELECT IFNULL(MIN(use_time),0) AS user_time,userid FROM pk_ranking  WHERE complete =1   GROUP BY  userid ORDER BY user_time ) AS b WHERE  user_time !=0 ORDER BY user_time
+        </select>
+    <select id="rankingteamlist" resultType="com.xy.pank.entity.RankingTeam">
+    SELECT *  FROM pk_ranking_team WHERE complete =3  order by average_time
+
+    </select>
+
+    <select id="selectrankingbyid" resultType="com.xy.pank.entity.Ranking">
+        SELECT  *  FROM pk_ranking  WHERE complete =1 AND userid =#{userid} ORDER BY use_time  LIMIT 1
+
+    </select>
+</mapper>
