@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class QuitTiming {
     private UserDao userDao;
 
 
-   // @Scheduled( cron = "* 0/5 * * * ? ")
+    @Scheduled( cron = "* 0/5 * * * ? ")
     public void test(){
         System.out.println(1111111);
         Ranking ranking = new Ranking();
@@ -44,7 +45,7 @@ public class QuitTiming {
         List<Ranking> rankings = rankingDao.selectList(new QueryWrapper<>(ranking));
         rankings.forEach(item->{
             if(item.getStartTime() != null){
-                long dat =  new Date().getTime() - item.getStartTime().getTime();
+                long dat =  System.currentTimeMillis()  - item.getStartTime().getTime();
                 long l = dat / nd;
                 System.out.println(l);
                 if(l >= 1){
@@ -61,6 +62,11 @@ public class QuitTiming {
         //System.out.println("1111111");
     }
 
+    public static void main(String[] args) throws  Exception{
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parse = simpleDateFormat.parse("2020-11-15");
+        System.out.println((System.currentTimeMillis() - parse.getTime()) / (1000 * 24 * 60 * 60));
+    }
 
     @Autowired
     private DotDao dotDao;

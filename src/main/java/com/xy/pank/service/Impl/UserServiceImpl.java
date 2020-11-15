@@ -100,7 +100,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, PkUserEntity> implemen
             Calendar instance = Calendar.getInstance();
             int monthint = instance.get(Calendar.MONTH) + 1;
             int yearint = instance.get(Calendar.YEAR);
-            int weekint = instance.get(Calendar.DAY_OF_WEEK_IN_MONTH);
+            int weekint = instance.get(Calendar.WEEK_OF_MONTH);
             Month month = new Month();
             month.setYears(yearint);
             month.setMonth(monthint);
@@ -673,11 +673,11 @@ public class UserServiceImpl extends ServiceImpl<UserDao, PkUserEntity> implemen
 
         Calendar instance = Calendar.getInstance();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date parse = simpleDateFormat.parse("2011-10-11");
+        Date parse = simpleDateFormat.parse("2011-10-16");
         instance.setTime(parse);
         int i = instance.get(Calendar.MONTH)+1;
         int i1 = instance.get(Calendar.YEAR);
-        System.out.println(i1);
+        System.out.println(instance.get(Calendar.WEEK_OF_MONTH));
     }
 
     public  static  double getDistanceMeter1(GlobalCoordinates gpsFrom, GlobalCoordinates gpsTo, Ellipsoid ellipsoid)
