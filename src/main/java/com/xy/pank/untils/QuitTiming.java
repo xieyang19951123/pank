@@ -36,7 +36,7 @@ public class QuitTiming {
     private UserDao userDao;
 
 
-    @Scheduled( cron = "* 0/5 * * * ? ")
+   // @Scheduled( cron = "* 0/5 * * * ? ")
     public void test(){
         System.out.println(1111111);
         Ranking ranking = new Ranking();

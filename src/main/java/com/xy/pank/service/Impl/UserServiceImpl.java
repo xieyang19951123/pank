@@ -7,6 +7,7 @@ import com.xy.pank.dao.*;
 import com.xy.pank.entity.*;
 import com.xy.pank.entity.vo.ShowEntity;
 import com.xy.pank.idworker.Sid;
+import com.xy.pank.service.MonthService;
 import com.xy.pank.service.UserService;
 import com.xy.pank.untils.HttpGetAndPost;
 import com.xy.pank.untils.R;
@@ -21,6 +22,7 @@ import org.springframework.expression.spel.ast.OpNE;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -58,6 +60,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, PkUserEntity> implemen
 
     long ns = 1000;
 
+    @Autowired
+    private MonthDao monthDao;
+
     @Override
     public R getOpenId(String code) {
         System.out.println(code);
@@ -91,6 +96,24 @@ public class UserServiceImpl extends ServiceImpl<UserDao, PkUserEntity> implemen
             pkUserEntity.setShowStatus(1);
             pkUserEntity.setInthegame(0);
             pkUserEntity.setCreateTime(new Date());
+            //添加统计信息
+            Calendar instance = Calendar.getInstance();
+            int monthint = instance.get(Calendar.MONTH) + 1;
+            int yearint = instance.get(Calendar.YEAR);
+            int weekint = instance.get(Calendar.DAY_OF_WEEK_IN_MONTH);
+            Month month = new Month();
+            month.setYears(yearint);
+            month.setMonth(monthint);
+            month.setWeek(weekint);
+            month.setShowStatus(1);
+            Month month1 = monthDao.selectOne(new QueryWrapper<>(month));
+            if(month1 == null){
+                month.setPnumber(1);
+                monthDao.insert(month);
+            }else{
+                month1.setPnumber(month1.getPnumber()+1);
+                monthDao.updateById(month1);
+            }
             userDao.insert(pkUserEntity);
             return R.ok("正常情况下").put("page",pkUserEntity);
         }
@@ -279,7 +302,6 @@ public class UserServiceImpl extends ServiceImpl<UserDao, PkUserEntity> implemen
 
         //List<Ranking> collect1 = selectpangpna.stream().sorted(Comparator.comparing(Ranking::getUseTime)).collect(Collectors.toList());
         for (int i = 0; i <selectpangpna.size() ; i++) {
-
             List<Ranking> ranking = rankingDao.selectList(new QueryWrapper<>(selectpangpna.get(i)));
             Optional<Ranking> rs = ranking.stream().filter(item -> item.getUseTime() != null).distinct().min((e1, e2) -> e1.getUseTime().compareTo(e2.getUseTime()));
             if(!rs.isPresent()){
@@ -647,10 +669,15 @@ public class UserServiceImpl extends ServiceImpl<UserDao, PkUserEntity> implemen
         return dot1;
     }
 
-    public static void main(String[] args) {
-        GlobalCoordinates startglobalCoordinates = new GlobalCoordinates( 29.70120272531906,105.74964537697981);
-        GlobalCoordinates currentglobalCoordinates = new GlobalCoordinates(29.70120272531906,105.74964537697981);
-        System.out.println((int) Math.ceil(3000/(getDistanceMeter1(startglobalCoordinates, currentglobalCoordinates, Ellipsoid.Sphere) / 1000)));
+    public static void main(String[] args) throws Exception{
+
+        Calendar instance = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parse = simpleDateFormat.parse("2011-10-11");
+        instance.setTime(parse);
+        int i = instance.get(Calendar.MONTH)+1;
+        int i1 = instance.get(Calendar.YEAR);
+        System.out.println(i1);
     }
 
     public  static  double getDistanceMeter1(GlobalCoordinates gpsFrom, GlobalCoordinates gpsTo, Ellipsoid ellipsoid)
